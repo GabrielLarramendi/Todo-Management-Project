@@ -6,4 +6,6 @@ public interface TodoService {
 
     TodoDTO addTodo(TodoDTO todoDTO);
 
+    TodoDTO getTodoById(Long id);
+
 }
