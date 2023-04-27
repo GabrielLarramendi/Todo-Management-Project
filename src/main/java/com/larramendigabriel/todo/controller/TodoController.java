@@ -3,10 +3,11 @@ package com.larramendigabriel.todo.controller;
 import com.larramendigabriel.todo.dto.TodoDTO;
 import com.larramendigabriel.todo.service.TodoService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/todos")
@@ -27,4 +28,21 @@ public class TodoController {
         return new ResponseEntity<>(todoDTO, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<TodoDTO>> getAllTodos() {
+        List<TodoDTO> todoDTOList = todoService.getAllTodos();
+        return new ResponseEntity<>(todoDTOList, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TodoDTO> updateTodo(@RequestBody TodoDTO todoDTO, @PathVariable Long id) {
+        TodoDTO updatedDataTodoDTO = todoService.updateTodo(todoDTO, id);
+        return new ResponseEntity<>(updatedDataTodoDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTodo(@PathVariable Long id) {
+        todoService.deleteTodo(id);
+        return new ResponseEntity<>("To-do successfully deleted!", HttpStatus.OK);
+    }
 }

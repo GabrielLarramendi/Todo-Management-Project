@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -38,5 +38,33 @@ public class TodoServiceImpl implements TodoService {
         TodoDTO todoDTO = modelMapper.map(TodoJPA, TodoDTO.class);
 
         return todoDTO;
+    }
+
+    @Override
+    public List<TodoDTO> getAllTodos() {
+        List<Todo> todoList = todoRepository.findAll();
+        List<TodoDTO> todoDTOList = todoList.stream().map((todo) -> modelMapper.map(todo, TodoDTO.class)).toList();
+        return todoDTOList;
+    }
+
+    @Override
+    public TodoDTO updateTodo(TodoDTO todoDTO, Long id) {
+        Todo todoJPA = todoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("To-do not found with the id: " + id)
+        );
+        todoJPA.setTitle(todoDTO.getTitle());
+        todoJPA.setDescription(todoDTO.getDescription());
+        todoJPA.setCompleted(todoDTO.getCompleted());
+        Todo updatedTodo = todoRepository.save(todoJPA);
+
+        return modelMapper.map(updatedTodo, TodoDTO.class);
+    }
+
+    @Override
+    public void deleteTodo(Long id) {
+        Todo todoJPA = todoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("To-do not found with the id: " + id)
+        );
+        todoRepository.deleteById(id);
     }
 }
