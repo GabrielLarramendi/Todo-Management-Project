@@ -24,5 +24,5 @@ public class Todo {
     @Column(nullable = false) //JPA creates, automatically, a column with attribute's name. If you want a different name, you have to use 'name' attribute in @Column.
     private String description;
 
-    private Boolean complete;
+    private Boolean completed;
 }
